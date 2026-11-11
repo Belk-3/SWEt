@@ -1,0 +1,17 @@
+
+> vite-react-typescript-starter@0.0.0 test
+> vitest run
+
+
+ RUN  v3.2.7 ./final
+
+ ✓ src/filtering/roomFilter.test.ts (9 tests) 14ms
+ ✓ src/rules/availability.test.ts (16 tests) 14ms
+ ✓ src/App.test.tsx (7 tests) 890ms
+   ✓ App integration > F5: switching rooms re-evaluates against the chosen room bookings  411ms
+
+ Test Files  3 passed (3)
+      Tests  32 passed (32)
+   Start at  23:35:54
+   Duration  5.47s (transform 357ms, setup 0ms, collect 1.49s, tests 918ms, environment 4.95s, prepare 3.17s)
+

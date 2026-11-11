@@ -1,0 +1,83 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Student {
+  - studentId: String
+  - name: String
+  - email: String
+  + createBooking(room: Room, startTime: DateTime, durationInMinutes: int): Booking
+  + cancelBooking(booking: Booking): boolean
+}
+
+class Administrator {
+  - adminId: String
+  - name: String
+  - email: String
+  + blockRoom(room: Room, startTime: DateTime, endTime: DateTime, reason: String): RoomBlock
+  + unblockRoom(block: RoomBlock): boolean
+  + reviewUsage(room: Room, startDate: Date, endDate: Date): List<Booking>
+}
+
+class Room {
+  - roomId: String
+  - roomNumber: String
+  - capacity: int
+  - location: String
+  + isAvailable(startTime: DateTime, durationInMinutes: int): boolean
+}
+
+class Booking {
+  - bookingId: String
+  - startTime: DateTime
+  - durationInMinutes: int
+  - status: BookingStatus
+  - createdAt: DateTime
+  + cancel(): void
+  + isValidDuration(): boolean
+  + overlapsWith(otherStart: DateTime, otherDuration: int): boolean
+}
+
+class RoomBlock {
+  - blockId: String
+  - startTime: DateTime
+  - endTime: DateTime
+  - reason: String
+  + isActiveDuring(startTime: DateTime, endTime: DateTime): boolean
+}
+
+class Confirmation {
+  - confirmationId: String
+  - confirmationCode: String
+  - issuedAt: DateTime
+  - type: ConfirmationType
+  + sendNotification(): boolean
+}
+
+enum BookingStatus {
+  ACTIVE
+  CANCELLED
+}
+
+enum ConfirmationType {
+  BOOKING_CREATED
+  BOOKING_CANCELLED
+}
+
+Student "1" -- "0..*" Booking : places >
+Room "1" -- "0..*" Booking : hosts >
+Administrator "1" -- "0..*" RoomBlock : enforces >
+Room "1" -- "0..*" RoomBlock : subject to >
+Booking "1" -- "1..*" Confirmation : triggers >
+
+
+
+note bottom of Booking
+  R1: startTime must be in the future,
+  0 < durationInMinutes <= 120
+  R2: two ACTIVE bookings for the same Room
+  must not overlap in time
+  R3: a Booking cannot be created while an
+  active RoomBlock covers the requested period
+end note
+
+@enduml

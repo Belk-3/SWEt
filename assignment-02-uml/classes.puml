@@ -1,0 +1,51 @@
+@startuml
+title Course registration - domain class diagram
+skinparam classAttributeIconSize 0
+
+class Student {
+  - studentId: String
+  - fullName: String
+}
+
+class Course {
+  - courseCode: String
+  - title: String
+}
+
+class CourseOffering {
+  - offeringId: String
+  - semester: String
+  - capacity: int
+  + enrolledCount(): int
+  + availablePlaces(): int
+  + hasFreePlace(): boolean
+}
+
+class Enrollment {
+  - enrollmentId: String
+  - createdAt: DateTime
+}
+
+Course "1" -- "0..*" CourseOffering : offers >
+Student "1" -- "0..*" Enrollment : holds >
+CourseOffering "1" -- "0..*" Enrollment : records >
+
+note bottom of CourseOffering
+  Capacity constraint (R2):
+  enrolledCount() <= capacity at all times.
+  availablePlaces() = capacity - enrolledCount(),
+  derived, not stored, because cancellation
+  is out of scope.
+end note
+
+note bottom of Enrollment
+  Uniqueness constraint (R3):
+  the pair (Student, CourseOffering) is unique;
+  a student holds at most one Enrollment
+  in the same offering.
+  Creation of an Enrollment together with the
+  duplicate and capacity checks is one atomic
+  operation (R4). Rejected requests create
+  nothing (R5).
+end note
+@enduml

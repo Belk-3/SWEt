@@ -1,0 +1,89 @@
+Practice #07 — Mutation challenge: terminal outputs (npx vitest run, Vitest v2.1.9)
+(separator lines shortened; everything else as printed in the Bolt terminal)
+
+==================== M1: end - start >= 120 ====================
+ ❯ src/lib/rooms.test.ts (19)
+   ❯ checkAvailability — AC1–AC6 (currentMinutes = 540) (19)
+     ✓ T01 … ✓ T05
+     × T06: 720–840 exactly 120 min → available
+     ✓ T07 … ✓ T19
+
+ FAIL  src/lib/rooms.test.ts > checkAvailability — AC1–AC6 (currentMinutes = 540) > T06: 720–840 exactly 120 min → available
+AssertionError: expected false to be true // Object.is equality
+- Expected
++ Received
+- true
++ false
+ ❯ null.<anonymous> src/lib/rooms.test.ts:102:27
+    101|     const res = checkAvailability(room, 720, 840, CURRENT);
+    102|     expect(res.available).toBe(true);
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 18 passed (19)
+   Start at  16:51:57
+   Duration  4.23s
+
+==================== M2: touching counted as overlap (<= / >=) ====================
+ ❯ src/lib/rooms.test.ts (19)
+   ❯ checkAvailability — AC1–AC6 (currentMinutes = 540) (19)
+     × T01: 660–720 touching after existing → available
+     ✓ T02 … ✓ T07
+     × T08: 570–600 touching before → available
+     ✓ T09 … ✓ T16
+     × T17: 541–600 one minute after now, touching booking → available
+     ✓ T18, ✓ T19
+
+ FAIL  … > T01: 660–720 touching after existing → available
+AssertionError: expected false to be true // Object.is equality
+ ❯ null.<anonymous> src/lib/rooms.test.ts:42:27
+     41|     const res = checkAvailability(room, 660, 720, CURRENT);
+     42|     expect(res.available).toBe(true);
+
+ FAIL  … > T08: 570–600 touching before → available
+AssertionError: expected false to be true // Object.is equality
+ ❯ null.<anonymous> src/lib/rooms.test.ts:126:27
+    125|     const res = checkAvailability(room, 570, 600, CURRENT);
+    126|     expect(res.available).toBe(true);
+
+ FAIL  … > T17: 541–600 one minute after now, touching booking → available
+AssertionError: expected false to be true // Object.is equality
+ ❯ null.<anonymous> src/lib/rooms.test.ts:245:27
+    244|     const res = checkAvailability(room, 541, 600, CURRENT);
+    245|     expect(res.available).toBe(true);
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 16 passed (19)
+   Start at  17:49:55
+   Duration  6.15s
+
+==================== M3: blocked-room rejection removed ====================
+ ❯ src/lib/rooms.test.ts (19)
+   ❯ checkAvailability — AC1–AC6 (currentMinutes = 540) (19)
+     ✓ T01 … ✓ T12
+     × T13: 660–720 blocked room → unavailable
+     ✓ T14 … ✓ T19
+
+ FAIL  … > T13: 660–720 blocked room → unavailable
+AssertionError: expected true to be false // Object.is equality
+- Expected
++ Received
+- false
++ true
+ ❯ null.<anonymous> src/lib/rooms.test.ts:194:27
+    193|     const res = checkAvailability(room, 660, 720, CURRENT);
+    194|     expect(res.available).toBe(false);
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 18 passed (19)
+   Start at  17:51:51
+   Duration  4.17s
+
+==================== Restored correct code ====================
+ ✓ src/lib/rooms.test.ts (19)
+   ✓ checkAvailability — AC1–AC6 (currentMinutes = 540) (19)
+     ✓ T01 … ✓ T19 (all 19)
+
+ Test Files  1 passed (1)
+      Tests  19 passed (19)
+   Start at  17:52:21
+   Duration  4.13s

@@ -1,0 +1,49 @@
+@startuml
+autonumber
+actor Student
+participant BookingService
+participant BookingRepository
+
+Student -> BookingService: bookRoom(roomId, startTime, durationInMinutes)
+activate BookingService
+
+' Validate Rule R1
+BookingService -> BookingService: validateTimeRules(startTime, durationInMinutes)
+note right of BookingService
+  R1: startTime is in the future AND
+  durationInMinutes > 0 AND <= 120
+end note
+
+' Validate Rules R2 & R3
+BookingService -> BookingRepository: checkAvailability(roomId, startTime, durationInMinutes)
+activate BookingRepository
+note right of BookingRepository
+  R2: Check for overlapping ACTIVE bookings
+  R3: Check for active RoomBlocks
+end note
+BookingRepository --> BookingService: availabilityStatus
+deactivate BookingRepository
+
+alt Room Available AND Time Valid
+    
+    BookingService -> BookingRepository: save(new Booking)
+    activate BookingRepository
+    BookingRepository --> BookingService: savedBooking
+    deactivate BookingRepository
+    
+    BookingService -> BookingService: generateConfirmation(savedBooking)
+    note right of BookingService
+      R4: Produce confirmation upon 
+      successful creation
+    end note
+    
+    BookingService --> Student: bookingConfirmed(confirmationDetails)
+
+else Room Unavailable OR Time Invalid
+    
+    BookingService --> Student: bookingRejected(reason)
+
+end
+
+deactivate BookingService
+@enduml

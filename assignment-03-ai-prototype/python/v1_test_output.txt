@@ -1,0 +1,82 @@
+test_121_minutes_is_unavailable (__main__.AcceptanceTests.test_121_minutes_is_unavailable) ... ok
+test_blocked_room_is_unavailable (__main__.AcceptanceTests.test_blocked_room_is_unavailable) ... ok
+test_covering_booking_is_unavailable (__main__.AcceptanceTests.test_covering_booking_is_unavailable) ... ok
+test_exactly_120_minutes_is_available (__main__.AcceptanceTests.test_exactly_120_minutes_is_available) ... ok
+test_inside_booking_is_unavailable (__main__.AcceptanceTests.test_inside_booking_is_unavailable) ... ok
+test_overlap_is_unavailable (__main__.AcceptanceTests.test_overlap_is_unavailable) ... ok
+test_starts_before_now_is_unavailable (__main__.AcceptanceTests.test_starts_before_now_is_unavailable) ... ok
+test_starts_now_is_unavailable (__main__.AcceptanceTests.test_starts_now_is_unavailable) ... ok
+test_touching_end_is_available (__main__.AcceptanceTests.test_touching_end_is_available) ... FAIL
+test_touching_start_is_available (__main__.AcceptanceTests.test_touching_start_is_available) ... FAIL
+test_bool_is_not_a_minute_value (__main__.BoundaryTests.test_bool_is_not_a_minute_value) ... FAIL
+test_end_after_1440 (__main__.BoundaryTests.test_end_after_1440) ... ok
+test_end_exactly_1440_is_available (__main__.BoundaryTests.test_end_exactly_1440_is_available) ... ok
+test_inputs_unchanged (__main__.BoundaryTests.test_inputs_unchanged) ... ok
+test_multiple_bookings_gap_fits (__main__.BoundaryTests.test_multiple_bookings_gap_fits) ... FAIL
+test_multiple_bookings_overlaps_second (__main__.BoundaryTests.test_multiple_bookings_overlaps_second) ... ok
+test_negative_start (__main__.BoundaryTests.test_negative_start) ... ok
+test_no_existing_bookings (__main__.BoundaryTests.test_no_existing_bookings) ... ok
+test_non_integer_minutes (__main__.BoundaryTests.test_non_integer_minutes) ... FAIL
+test_returns_real_bool (__main__.BoundaryTests.test_returns_real_bool) ... FAIL
+test_reversed_times (__main__.BoundaryTests.test_reversed_times) ... ok
+test_start_zero_with_earlier_now_not_possible (__main__.BoundaryTests.test_start_zero_with_earlier_now_not_possible) ... ok
+test_zero_length (__main__.BoundaryTests.test_zero_length) ... ok
+
+======================================================================
+FAIL: test_touching_end_is_available (__main__.AcceptanceTests.test_touching_end_is_available)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "v1\test_booking.py", line 15, in test_touching_end_is_available
+    self.assertTrue(can_book(660, 720, NOW, False, EXISTING))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_touching_start_is_available (__main__.AcceptanceTests.test_touching_start_is_available)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "v1\test_booking.py", line 18, in test_touching_start_is_available
+    self.assertTrue(can_book(570, 600, NOW, False, EXISTING))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_bool_is_not_a_minute_value (__main__.BoundaryTests.test_bool_is_not_a_minute_value)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "v1\test_booking.py", line 70, in test_bool_is_not_a_minute_value
+    self.assertFalse(can_book(True, 60, 0, False, []))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_multiple_bookings_gap_fits (__main__.BoundaryTests.test_multiple_bookings_gap_fits)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "v1\test_booking.py", line 74, in test_multiple_bookings_gap_fits
+    self.assertTrue(can_book(660, 720, NOW, False, bookings))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_non_integer_minutes (__main__.BoundaryTests.test_non_integer_minutes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "v1\test_booking.py", line 67, in test_non_integer_minutes
+    self.assertFalse(can_book(660.5, 720, NOW, False, EXISTING))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_returns_real_bool (__main__.BoundaryTests.test_returns_real_bool)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "v1\test_booking.py", line 91, in test_returns_real_bool
+    self.assertIs(can_book(660, 720, NOW, False, EXISTING), True)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not True
+
+----------------------------------------------------------------------
+Ran 23 tests in 0.004s
+
+FAILED (failures=6)

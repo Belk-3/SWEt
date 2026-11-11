@@ -1,0 +1,44 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor Student
+actor Administrator
+
+rectangle "Smart Campus Study Room Booking System" {
+  usecase "View Room Availability" as UC_ViewAvail
+  usecase "Book a Room" as UC_Book
+  usecase "Cancel Own Booking" as UC_Cancel
+  usecase "Send Confirmation" as UC_Confirm
+
+  usecase "Block Room" as UC_Block
+  usecase "Unblock Room" as UC_Unblock
+  usecase "Review Room Usage" as UC_Review
+}
+
+' Student associations
+Student -- UC_ViewAvail
+Student -- UC_Book
+Student -- UC_Cancel
+
+' Administrator associations
+Administrator -- UC_Block
+Administrator -- UC_Unblock
+Administrator -- UC_Review
+
+' Include relationships
+UC_Book ..> UC_Confirm : <<include>>
+UC_Cancel ..> UC_Confirm : <<include>>
+
+note bottom of UC_Book
+  R1: Future start, duration > 0 and <= 2 hrs
+  R2: No overlapping active bookings
+  R3: Room must not be blocked
+end note
+
+note bottom of UC_Confirm
+  R4: Confirmation produced upon
+  successful creation or cancellation
+end note
+
+@enduml

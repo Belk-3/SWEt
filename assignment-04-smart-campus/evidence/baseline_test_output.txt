@@ -1,0 +1,14 @@
+
+> vite-react-typescript-starter@0.0.0 test:baseline
+> vitest run --config vitest.baseline.config.ts
+
+
+ RUN  v3.2.7 ./final
+
+ ✓ src/rules/availability.test.ts (16 tests) 10ms
+
+ Test Files  1 passed (1)
+      Tests  16 passed (16)
+   Start at  23:36:03
+   Duration  2.08s (transform 112ms, setup 0ms, collect 145ms, tests 10ms, environment 0ms, prepare 204ms)
+

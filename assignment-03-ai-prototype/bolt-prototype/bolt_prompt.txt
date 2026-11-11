@@ -1,0 +1,53 @@
+Build a single-page, responsive web app: "Smart Campus Room Availability Checker".
+Frontend only (React + TypeScript + Tailwind is fine). STRICTLY NO login, no backend,
+no database, no external APIs, no payments, no extra features. All data is fictional
+and hard-coded in the client.
+
+PURPOSE
+User story: As a student, I want to check a room's availability so that I can choose
+a valid booking time. The page ONLY checks availability. It must NOT create, save,
+confirm or modify bookings.
+
+DATA (fictional, one selected room)
+- Room: "Room B-204 · Lab · 30 seats"
+- Existing bookings for today (minutes after midnight): [(600, 660)]  → 10:00–11:00
+- blocked: false (show a toggle "Room blocked (maintenance)" to simulate blocked = true)
+- now: default 540 (09:00), editable via a "Simulated current time" input so tests are reproducible
+
+FORM
+- Start time and End time as HH:MM inputs (00:00–24:00; 24:00 must be accepted as 1440).
+  Also show the converted minute value under each field (e.g. "= 660 min").
+- A "Check availability" button.
+
+CORE LOGIC — implement a pure function in its own file (src/lib/canBook.ts):
+canBook(start, end, now, blocked, existing) -> { available: boolean, reasons: string[] }
+Rules (treat as fixed, do not change their meaning):
+- AC1: start and end are integers; 0 <= start < end <= 1440; start must be strictly
+  greater than now (start === now is INVALID).
+- AC2: duration = end - start must be <= 120. Exactly 120 is allowed; 121 is not.
+- AC3: if blocked is true, reject every request.
+- AC4: reject if it overlaps any existing booking. Overlap means
+  start < bEnd && bStart < end. Intervals touching at an endpoint do NOT overlap
+  (660–720 next to 600–660 is fine).
+- AC5: show a clear, unambiguous result: big "Available" (green) or "Unavailable" (red).
+  Never mutate the existing bookings array or the inputs.
+- AC6: understandable validation messages for each failed rule (e.g. "End must be after
+  start", "Maximum duration is 120 minutes — you selected 121", "Start must be after the
+  current time 09:00", "Overlaps booking 10:00–11:00", "Room is blocked"), and a layout
+  that works well on narrow / mobile screens (360px wide).
+
+DESIGN — make it look modern and polished
+- Clean card-based layout, soft shadows, rounded-2xl corners, generous spacing,
+  Inter or system font, subtle campus-themed accent color (deep indigo + teal).
+- Header with room name, small room icon and "Today" date chip.
+- A horizontal day timeline (08:00–20:00 visible, scrollable for full day) showing
+  existing bookings as blocks, the "now" marker as a vertical line, and the
+  candidate interval as a highlighted preview (green if valid, red if not).
+- Result panel with large status badge + icon, plus the list of reasons.
+- Accessible: labels on all inputs, aria-live on the result, good contrast,
+  keyboard friendly. Light mode by default; dark mode optional.
+
+QUALITY
+- Keep logic separate from UI; small readable components (Header, BookingForm,
+  DayTimeline, ResultPanel).
+- No feature beyond what is described above.

@@ -1,0 +1,71 @@
+@startuml
+title Course registration - Book an offering (R1-R5)
+autonumber
+
+actor Student
+participant "RegistrationService" as Service
+participant "EnrollmentRepository" as Repo
+
+== Browse catalog (R1) ==
+Student -> Service: browseCatalog(semester)
+activate Service
+Service -> Repo: findOfferings(semester)
+activate Repo
+Repo --> Service: offerings with capacity and enrollment count
+deactivate Repo
+Service --> Student: catalog(courseCode, title, offeringId, availablePlaces = capacity - enrolled)
+note right of Student
+  R1: browsing is read-only.
+  Viewing the catalog does not
+  reserve a place.
+end note
+deactivate Service
+
+== Request registration (R2-R5) ==
+Student -> Service: requestRegistration(studentId, offeringId)
+activate Service
+
+group atomic operation [final checks and creation are one indivisible step]
+  Service -> Repo: checkDuplicate(studentId, offeringId)
+  activate Repo
+  Repo --> Service: duplicateExists (true / false)
+  deactivate Repo
+
+  alt duplicateExists = true
+    Service --> Student: rejected("already enrolled")
+    note right of Service
+      R3, R5: no Enrollment is created,
+      the enrollment count is unchanged.
+    end note
+
+  else duplicateExists = false
+    Service -> Repo: getCurrentCount(offeringId)
+    activate Repo
+    Repo --> Service: enrolled, capacity
+    deactivate Repo
+
+    alt enrolled >= capacity
+      Service --> Student: rejected("course full")
+      note right of Service
+        R2, R5: a stale catalog view
+        does not reserve a place.
+        No Enrollment is created.
+      end note
+
+    else enrolled < capacity
+      Service -> Repo: createEnrollment(studentId, offeringId)
+      activate Repo
+      Repo --> Service: enrollment created, count = enrolled + 1
+      deactivate Repo
+      Service --> Student: confirmation(enrollmentId, offeringId)
+      note right of Service
+        R4: exactly one Enrollment,
+        availability updated,
+        confirmation returned after creation.
+      end note
+    end
+  end
+end
+
+deactivate Service
+@enduml
